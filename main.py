@@ -14,6 +14,10 @@ def main() -> int:
     here = os.path.dirname(os.path.abspath(__file__))
     with open(os.path.join(here, "emoji.txt"), "rb") as handle:
         raw = handle.read()
+    # Tolerate a trailing newline in the source file: the entry itself is
+    # exactly one emoji, with no trailing newline.
+    if raw.endswith(b"\n"):
+        raw = raw[:-1]
 
     text = raw.decode("utf-8")
     if not (1 <= len(text) <= 8):
@@ -35,7 +39,7 @@ def main() -> int:
         print("entry.txt does not match emoji.txt", file=sys.stderr)
         return 1
 
-    print(f"Wrote {len(raw)} bytes ({len(text)} character) to {target}")
+    print(f"Wrote {len(raw)} bytes ({len(text)} character) to {target}: {text}")
     return 0
 
 
